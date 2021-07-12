@@ -195,4 +195,27 @@ class TriangleDownToLeftView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Rederer(var view : TriangleDownToLeftView) {
+
+        private val animator : Animator = Animator(view)
+        private val tdl : TriangleDownToLeft = TriangleDownToLeft(0)
+        private val paint : Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        fun render(canvas : Canvas) {
+            canvas.drawColor(backColor)
+            tdl.draw(canvas, paint)
+            animator.animate {
+                tdl.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            tdl.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }

@@ -7,6 +7,7 @@ import android.content.Context
 import android.graphics.Paint
 import android.graphics.Canvas
 import android.graphics.Color
+import android.util.Log
 
 val colors : Array<Int> = arrayOf(
     "#1A237E",
@@ -22,11 +23,11 @@ val sizeFactor : Float = 7.2f
 val delay : Long = 20
 val backColor : Int = Color.parseColor("#BDBDBD")
 val parts : Int  = 5
-val scGap : Float = 0.02f / parts
+val scGap : Float = 0.05f / parts
 val deg : Float = 90f
 
 fun Int.inverse() : Float = 1f / this
-fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n)
+fun Float.maxScale(i : Int, n : Int) : Float = Math.max(0f, this - i * n.inverse())
 fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale(i, n)) * n
 
 fun Canvas.drawTriangleDownToLeft(scale : Float, w : Float, h : Float, paint : Paint) {
@@ -36,15 +37,19 @@ fun Canvas.drawTriangleDownToLeft(scale : Float, w : Float, h : Float, paint : P
     val sc3 : Float = scale.divideScale(2, parts)
     val sc4 : Float = scale.divideScale(3, parts)
     val sc5 : Float = scale.divideScale(4, parts)
+    Log.d("TRIANGLE_DOWN_TO_LEFT", "$sc1 $sc2 $sc3 $sc4 $sc5")
     save()
-    translate(w / 2 + (w / 2) * sc5, h / 2 + (h / 2) * (1 - sc3))
+    translate(
+        w / 2 + (w / 2) * sc5,
+        h / 2 + (h / 2 - size / 2) * (1 - sc3)
+    )
     rotate(deg * sc4)
     if (sc1 > 0f) {
         drawLine(
             -size / 2,
-            0f,
+            size / 2,
             -size / 2 + (size / 2) * sc1,
-            -(size / 2) * sc1,
+            (size / 2) - size * sc1,
             paint
         )
     }
@@ -53,7 +58,7 @@ fun Canvas.drawTriangleDownToLeft(scale : Float, w : Float, h : Float, paint : P
             0f,
             -size / 2,
             (size / 2) * sc2,
-            -(size / 2) + size * 0.5f * sc1,
+            -size / 2 + size * sc2,
             paint
         )
     }

@@ -220,4 +220,13 @@ class TriangleDownToLeftView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+
+        fun create(activity : Activity) : TriangleDownToLeftView {
+            val view : TriangleDownToLeftView = TriangleDownToLeftView(activity)
+            activity.setContentView(view)
+            return view
+        }
+    }
 }
